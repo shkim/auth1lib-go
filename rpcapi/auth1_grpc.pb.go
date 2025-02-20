@@ -22,13 +22,23 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type Auth1Client interface {
-	GetSiteJwtSecret(ctx context.Context, in *SiteJwtSecretRequest, opts ...grpc.CallOption) (*SiteJwtSecretReply, error)
+	GetJwtSecret(ctx context.Context, in *JwtSecretRequest, opts ...grpc.CallOption) (*JwtSecretReply, error)
 	LoginUidpw(ctx context.Context, in *LoginUidpwRequest, opts ...grpc.CallOption) (*LoginResultReply, error)
 	LoginOneTap(ctx context.Context, in *LoginOneTapRequest, opts ...grpc.CallOption) (*LoginResultReply, error)
 	RefreshUser(ctx context.Context, in *RtokenRequest, opts ...grpc.CallOption) (*LoginResultReply, error)
 	LogoutUser(ctx context.Context, in *RtokenRequest, opts ...grpc.CallOption) (*LogoutReply, error)
 	GetUserInfo(ctx context.Context, in *UserInfoRequest, opts ...grpc.CallOption) (*UserInfoReply, error)
 	AddSiteUser(ctx context.Context, in *AddSiteUserRequest, opts ...grpc.CallOption) (*AddSiteUserReply, error)
+	SetUserInfo(ctx context.Context, in *SetUserInfoRequest, opts ...grpc.CallOption) (*SetUserInfoReply, error)
+	SetUserPw(ctx context.Context, in *SetUserPwRequest, opts ...grpc.CallOption) (*SetUserInfoReply, error)
+	SetUserPhoto(ctx context.Context, in *SetUserPhotoRequest, opts ...grpc.CallOption) (*SetUserInfoReply, error)
+	// tenant-level rpcs
+	LoginAdmin(ctx context.Context, in *LoginAdminRequest, opts ...grpc.CallOption) (*LoginResultReply, error)
+	RefreshAdmin(ctx context.Context, in *RtokenRequest, opts ...grpc.CallOption) (*LoginResultReply, error)
+	LogoutAdmin(ctx context.Context, in *RtokenRequest, opts ...grpc.CallOption) (*LogoutReply, error)
+	CreateSite(ctx context.Context, in *CreateSiteRequest, opts ...grpc.CallOption) (*CreateSiteReply, error)
+	// rpc GetSiteInfo(SiteInfoRequest) returns (SiteInfoReply) {}
+	SetUidpwPV(ctx context.Context, in *SetUidpwPvRequest, opts ...grpc.CallOption) (*SetUidpwPvReply, error)
 }
 
 type auth1Client struct {
@@ -39,9 +49,9 @@ func NewAuth1Client(cc grpc.ClientConnInterface) Auth1Client {
 	return &auth1Client{cc}
 }
 
-func (c *auth1Client) GetSiteJwtSecret(ctx context.Context, in *SiteJwtSecretRequest, opts ...grpc.CallOption) (*SiteJwtSecretReply, error) {
-	out := new(SiteJwtSecretReply)
-	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/GetSiteJwtSecret", in, out, opts...)
+func (c *auth1Client) GetJwtSecret(ctx context.Context, in *JwtSecretRequest, opts ...grpc.CallOption) (*JwtSecretReply, error) {
+	out := new(JwtSecretReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/GetJwtSecret", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -102,17 +112,99 @@ func (c *auth1Client) AddSiteUser(ctx context.Context, in *AddSiteUserRequest, o
 	return out, nil
 }
 
+func (c *auth1Client) SetUserInfo(ctx context.Context, in *SetUserInfoRequest, opts ...grpc.CallOption) (*SetUserInfoReply, error) {
+	out := new(SetUserInfoReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/SetUserInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *auth1Client) SetUserPw(ctx context.Context, in *SetUserPwRequest, opts ...grpc.CallOption) (*SetUserInfoReply, error) {
+	out := new(SetUserInfoReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/SetUserPw", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *auth1Client) SetUserPhoto(ctx context.Context, in *SetUserPhotoRequest, opts ...grpc.CallOption) (*SetUserInfoReply, error) {
+	out := new(SetUserInfoReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/SetUserPhoto", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *auth1Client) LoginAdmin(ctx context.Context, in *LoginAdminRequest, opts ...grpc.CallOption) (*LoginResultReply, error) {
+	out := new(LoginResultReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/LoginAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *auth1Client) RefreshAdmin(ctx context.Context, in *RtokenRequest, opts ...grpc.CallOption) (*LoginResultReply, error) {
+	out := new(LoginResultReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/RefreshAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *auth1Client) LogoutAdmin(ctx context.Context, in *RtokenRequest, opts ...grpc.CallOption) (*LogoutReply, error) {
+	out := new(LogoutReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/LogoutAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *auth1Client) CreateSite(ctx context.Context, in *CreateSiteRequest, opts ...grpc.CallOption) (*CreateSiteReply, error) {
+	out := new(CreateSiteReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/CreateSite", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *auth1Client) SetUidpwPV(ctx context.Context, in *SetUidpwPvRequest, opts ...grpc.CallOption) (*SetUidpwPvReply, error) {
+	out := new(SetUidpwPvReply)
+	err := c.cc.Invoke(ctx, "/rpcapi.Auth1/SetUidpwPV", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Auth1Server is the server API for Auth1 service.
 // All implementations must embed UnimplementedAuth1Server
 // for forward compatibility
 type Auth1Server interface {
-	GetSiteJwtSecret(context.Context, *SiteJwtSecretRequest) (*SiteJwtSecretReply, error)
+	GetJwtSecret(context.Context, *JwtSecretRequest) (*JwtSecretReply, error)
 	LoginUidpw(context.Context, *LoginUidpwRequest) (*LoginResultReply, error)
 	LoginOneTap(context.Context, *LoginOneTapRequest) (*LoginResultReply, error)
 	RefreshUser(context.Context, *RtokenRequest) (*LoginResultReply, error)
 	LogoutUser(context.Context, *RtokenRequest) (*LogoutReply, error)
 	GetUserInfo(context.Context, *UserInfoRequest) (*UserInfoReply, error)
 	AddSiteUser(context.Context, *AddSiteUserRequest) (*AddSiteUserReply, error)
+	SetUserInfo(context.Context, *SetUserInfoRequest) (*SetUserInfoReply, error)
+	SetUserPw(context.Context, *SetUserPwRequest) (*SetUserInfoReply, error)
+	SetUserPhoto(context.Context, *SetUserPhotoRequest) (*SetUserInfoReply, error)
+	// tenant-level rpcs
+	LoginAdmin(context.Context, *LoginAdminRequest) (*LoginResultReply, error)
+	RefreshAdmin(context.Context, *RtokenRequest) (*LoginResultReply, error)
+	LogoutAdmin(context.Context, *RtokenRequest) (*LogoutReply, error)
+	CreateSite(context.Context, *CreateSiteRequest) (*CreateSiteReply, error)
+	// rpc GetSiteInfo(SiteInfoRequest) returns (SiteInfoReply) {}
+	SetUidpwPV(context.Context, *SetUidpwPvRequest) (*SetUidpwPvReply, error)
 	mustEmbedUnimplementedAuth1Server()
 }
 
@@ -120,8 +212,8 @@ type Auth1Server interface {
 type UnimplementedAuth1Server struct {
 }
 
-func (UnimplementedAuth1Server) GetSiteJwtSecret(context.Context, *SiteJwtSecretRequest) (*SiteJwtSecretReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSiteJwtSecret not implemented")
+func (UnimplementedAuth1Server) GetJwtSecret(context.Context, *JwtSecretRequest) (*JwtSecretReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetJwtSecret not implemented")
 }
 func (UnimplementedAuth1Server) LoginUidpw(context.Context, *LoginUidpwRequest) (*LoginResultReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUidpw not implemented")
@@ -141,6 +233,30 @@ func (UnimplementedAuth1Server) GetUserInfo(context.Context, *UserInfoRequest) (
 func (UnimplementedAuth1Server) AddSiteUser(context.Context, *AddSiteUserRequest) (*AddSiteUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddSiteUser not implemented")
 }
+func (UnimplementedAuth1Server) SetUserInfo(context.Context, *SetUserInfoRequest) (*SetUserInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetUserInfo not implemented")
+}
+func (UnimplementedAuth1Server) SetUserPw(context.Context, *SetUserPwRequest) (*SetUserInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetUserPw not implemented")
+}
+func (UnimplementedAuth1Server) SetUserPhoto(context.Context, *SetUserPhotoRequest) (*SetUserInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetUserPhoto not implemented")
+}
+func (UnimplementedAuth1Server) LoginAdmin(context.Context, *LoginAdminRequest) (*LoginResultReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginAdmin not implemented")
+}
+func (UnimplementedAuth1Server) RefreshAdmin(context.Context, *RtokenRequest) (*LoginResultReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshAdmin not implemented")
+}
+func (UnimplementedAuth1Server) LogoutAdmin(context.Context, *RtokenRequest) (*LogoutReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LogoutAdmin not implemented")
+}
+func (UnimplementedAuth1Server) CreateSite(context.Context, *CreateSiteRequest) (*CreateSiteReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSite not implemented")
+}
+func (UnimplementedAuth1Server) SetUidpwPV(context.Context, *SetUidpwPvRequest) (*SetUidpwPvReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetUidpwPV not implemented")
+}
 func (UnimplementedAuth1Server) mustEmbedUnimplementedAuth1Server() {}
 
 // UnsafeAuth1Server may be embedded to opt out of forward compatibility for this service.
@@ -154,20 +270,20 @@ func RegisterAuth1Server(s grpc.ServiceRegistrar, srv Auth1Server) {
 	s.RegisterService(&Auth1_ServiceDesc, srv)
 }
 
-func _Auth1_GetSiteJwtSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SiteJwtSecretRequest)
+func _Auth1_GetJwtSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(JwtSecretRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(Auth1Server).GetSiteJwtSecret(ctx, in)
+		return srv.(Auth1Server).GetJwtSecret(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rpcapi.Auth1/GetSiteJwtSecret",
+		FullMethod: "/rpcapi.Auth1/GetJwtSecret",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(Auth1Server).GetSiteJwtSecret(ctx, req.(*SiteJwtSecretRequest))
+		return srv.(Auth1Server).GetJwtSecret(ctx, req.(*JwtSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -280,6 +396,150 @@ func _Auth1_AddSiteUser_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth1_SetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetUserInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Auth1Server).SetUserInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpcapi.Auth1/SetUserInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Auth1Server).SetUserInfo(ctx, req.(*SetUserInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth1_SetUserPw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetUserPwRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Auth1Server).SetUserPw(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpcapi.Auth1/SetUserPw",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Auth1Server).SetUserPw(ctx, req.(*SetUserPwRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth1_SetUserPhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetUserPhotoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Auth1Server).SetUserPhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpcapi.Auth1/SetUserPhoto",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Auth1Server).SetUserPhoto(ctx, req.(*SetUserPhotoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth1_LoginAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginAdminRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Auth1Server).LoginAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpcapi.Auth1/LoginAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Auth1Server).LoginAdmin(ctx, req.(*LoginAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth1_RefreshAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RtokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Auth1Server).RefreshAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpcapi.Auth1/RefreshAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Auth1Server).RefreshAdmin(ctx, req.(*RtokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth1_LogoutAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RtokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Auth1Server).LogoutAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpcapi.Auth1/LogoutAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Auth1Server).LogoutAdmin(ctx, req.(*RtokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth1_CreateSite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSiteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Auth1Server).CreateSite(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpcapi.Auth1/CreateSite",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Auth1Server).CreateSite(ctx, req.(*CreateSiteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth1_SetUidpwPV_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetUidpwPvRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Auth1Server).SetUidpwPV(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rpcapi.Auth1/SetUidpwPV",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Auth1Server).SetUidpwPV(ctx, req.(*SetUidpwPvRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Auth1_ServiceDesc is the grpc.ServiceDesc for Auth1 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -288,8 +548,8 @@ var Auth1_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*Auth1Server)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetSiteJwtSecret",
-			Handler:    _Auth1_GetSiteJwtSecret_Handler,
+			MethodName: "GetJwtSecret",
+			Handler:    _Auth1_GetJwtSecret_Handler,
 		},
 		{
 			MethodName: "LoginUidpw",
@@ -314,6 +574,38 @@ var Auth1_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddSiteUser",
 			Handler:    _Auth1_AddSiteUser_Handler,
+		},
+		{
+			MethodName: "SetUserInfo",
+			Handler:    _Auth1_SetUserInfo_Handler,
+		},
+		{
+			MethodName: "SetUserPw",
+			Handler:    _Auth1_SetUserPw_Handler,
+		},
+		{
+			MethodName: "SetUserPhoto",
+			Handler:    _Auth1_SetUserPhoto_Handler,
+		},
+		{
+			MethodName: "LoginAdmin",
+			Handler:    _Auth1_LoginAdmin_Handler,
+		},
+		{
+			MethodName: "RefreshAdmin",
+			Handler:    _Auth1_RefreshAdmin_Handler,
+		},
+		{
+			MethodName: "LogoutAdmin",
+			Handler:    _Auth1_LogoutAdmin_Handler,
+		},
+		{
+			MethodName: "CreateSite",
+			Handler:    _Auth1_CreateSite_Handler,
+		},
+		{
+			MethodName: "SetUidpwPV",
+			Handler:    _Auth1_SetUidpwPV_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
