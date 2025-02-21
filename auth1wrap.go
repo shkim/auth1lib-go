@@ -345,3 +345,21 @@ func (wrapper *Auth1Wrapper) CreateSite(siteKey, name, memo string) (int32, erro
 	}
 	return r.SiteId, nil
 }
+
+func (wrapper *Auth1Wrapper) SetUidpwPV(disable bool, opts ...auth1SiteSpecifier) (bool, error) {
+	siteId, siteKey := getSiteIdOrKey(opts)
+
+	ctx, cancel := context.WithTimeout(metadata.NewOutgoingContext(context.Background(), wrapper.md), wrapper.timeoutInSecs)
+	defer cancel()
+
+	_, err := wrapper.acli.SetUidpwPV(ctx, &pb.SetUidpwPvRequest{
+		SiteKey:  siteKey,
+		SiteId:   siteId,
+		Disabled: disable,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil // FIXME
+}
